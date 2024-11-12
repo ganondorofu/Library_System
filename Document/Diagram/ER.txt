@@ -1,0 +1,75 @@
+erDiagram
+    USERS ||--o{ LOANS : makes
+    USERS ||--o{ RESERVATIONS : makes
+    USERS ||--o{ LOGIN_HISTORY : has
+    USERS ||--o{ OPERATION_LOGS : generates
+    BOOKS ||--o{ LOANS : has
+    BOOKS ||--o{ RESERVATIONS : has
+    BOOKS ||--o{ OPERATION_LOGS : associated_with
+    
+    USERS {
+        int user_id PK
+        string username
+        string email
+        string password_hash
+        string role
+        boolean is_active
+        datetime created_at
+        datetime updated_at
+        string mfa_secret
+        int failed_login_attempts
+        boolean is_locked
+    }
+
+    BOOKS {
+        int book_id PK
+        string isbn
+        string title
+        string author
+        string publisher
+        string publication_year
+        string genre
+        int total_copies
+        int available_copies
+        datetime created_at
+        datetime updated_at
+    }
+
+    LOANS {
+        int loan_id PK
+        int user_id FK
+        int book_id FK
+        datetime loan_date
+        datetime due_date
+        datetime return_date
+        boolean is_returned
+        string status
+    }
+
+    RESERVATIONS {
+        int reservation_id PK
+        int user_id FK
+        int book_id FK
+        datetime reservation_date
+        datetime expiration_date
+        string status
+    }
+
+    LOGIN_HISTORY {
+        int login_history_id PK
+        int user_id FK
+        datetime login_time
+        string ip_address
+        boolean login_success
+        string device_info
+    }
+
+    OPERATION_LOGS {
+        int log_id PK
+        int user_id FK
+        int book_id FK "nullable"
+        datetime operation_time
+        string operation_type
+        string details
+        string ip_address
+    }
