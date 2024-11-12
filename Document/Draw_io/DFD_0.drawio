@@ -1,0 +1,55 @@
+<mxfile host="Electron" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/24.7.5 Chrome/126.0.6478.183 Electron/31.3.0 Safari/537.36" version="24.7.5">
+  <diagram name="ページ1" id="q_iABhi6gDtYJ6NDjSA_">
+    <mxGraphModel dx="1434" dy="870" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="zoRPdXPNYnG9Tm2fAEHZ-13" value="管理システム" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="235" y="321" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="zoRPdXPNYnG9Tm2fAEHZ-16" value="管理者" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="235" y="110" width="120" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="zoRPdXPNYnG9Tm2fAEHZ-17" value="ユーザー" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="235" y="520" width="120" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="zoRPdXPNYnG9Tm2fAEHZ-18" value="" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=1;exitDx=0;exitDy=0;" edge="1" parent="1" source="zoRPdXPNYnG9Tm2fAEHZ-16">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="610" y="430" as="sourcePoint" />
+            <mxPoint x="337" y="320" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="zoRPdXPNYnG9Tm2fAEHZ-19" value="" style="endArrow=classic;html=1;rounded=0;exitX=0.858;exitY=1.017;exitDx=0;exitDy=0;entryX=1;entryY=0;entryDx=0;entryDy=0;exitPerimeter=0;" edge="1" parent="1" source="zoRPdXPNYnG9Tm2fAEHZ-13" target="zoRPdXPNYnG9Tm2fAEHZ-17">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="370" y="410" as="sourcePoint" />
+            <mxPoint x="325" y="520" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="zoRPdXPNYnG9Tm2fAEHZ-21" value="" style="endArrow=classic;html=1;rounded=0;exitX=0;exitY=0;exitDx=0;exitDy=0;entryX=0.15;entryY=1.017;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="zoRPdXPNYnG9Tm2fAEHZ-17" target="zoRPdXPNYnG9Tm2fAEHZ-13">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="348" y="392" as="sourcePoint" />
+            <mxPoint x="347" y="542" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="zoRPdXPNYnG9Tm2fAEHZ-22" value="" style="endArrow=classic;html=1;rounded=0;entryX=0;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" target="zoRPdXPNYnG9Tm2fAEHZ-16">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="253" y="320" as="sourcePoint" />
+            <mxPoint x="263" y="392" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="zoRPdXPNYnG9Tm2fAEHZ-23" value="予約&lt;div&gt;貸出&lt;/div&gt;&lt;div&gt;検索&lt;/div&gt;&lt;div&gt;ログイン&lt;/div&gt;&lt;div&gt;アカウント登録&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="350" y="410" width="110" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="zoRPdXPNYnG9Tm2fAEHZ-24" value="検索結果&lt;div&gt;予約確認&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="125" y="410" width="110" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="zoRPdXPNYnG9Tm2fAEHZ-25" value="返却&lt;div&gt;本の登録&lt;/div&gt;&lt;div&gt;貸出状況確認&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="350" y="220" width="110" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="zoRPdXPNYnG9Tm2fAEHZ-26" value="貸出状況" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="130" y="230" width="110" height="80" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
