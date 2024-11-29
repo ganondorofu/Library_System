@@ -1,14 +1,20 @@
-package com.example.demo.controller; // 必ず package 文はクラスの最初に記載する
+package com.example.demo.controller;
 
-import org.springframework.web.bind.annotation.GetMapping; // 必要なインポート
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
-@RestController
+@Controller
 @RequestMapping("/api")
 public class MainController {
+
+    /**
+     * インデックスページを表示
+     *
+     * @return "index" テンプレート名
+     */
     @GetMapping("/")
     public String index() {
-        return "index"; // クライアントに "index" を返す
+        return "index"; // templates/index.html を返す
     }
 }
