@@ -1,0 +1,223 @@
+#
+# There is insufficient memory for the Java Runtime Environment to continue.
+# Native memory allocation (mmap) failed to map 134217728 bytes for G1 virtual space
+# Possible reasons:
+#   The system is out of physical RAM or swap space
+#   The process is running with CompressedOops enabled, and the Java Heap may be blocking the growth of the native heap
+# Possible solutions:
+#   Reduce memory load on the system
+#   Increase physical memory or swap space
+#   Check if swap backing store is full
+#   Decrease Java heap size (-Xmx/-Xms)
+#   Decrease number of Java threads
+#   Decrease Java thread stack sizes (-Xss)
+#   Set larger code cache with -XX:ReservedCodeCacheSize=
+#   JVM is running with Unscaled Compressed Oops mode in which the Java heap is
+#     placed in the first 4GB address space. The Java Heap base address is the
+#     maximum limit for the native heap growth. Please use -XX:HeapBaseMinAddress
+#     to set the Java Heap base and to place the Java Heap above 4GB virtual address.
+# This output file may be truncated or incomplete.
+#
+#  Out of Memory Error (os_windows.cpp:3557), pid=18764, tid=8468
+#
+# JRE version:  (17.0.6+10) (build )
+# Java VM: OpenJDK 64-Bit Server VM (17.0.6+10, mixed mode, sharing, tiered, compressed oops, compressed class ptrs, g1 gc, windows-amd64)
+# No core dump will be written. Minidumps are not enabled by default on client versions of Windows
+#
+
+---------------  S U M M A R Y ------------
+
+Command Line: -Dmaven.home=EMBEDDED -Dclassworlds.conf=C:\pleiades\2022-12\workspace\.metadata\.plugins\org.eclipse.m2e.launching\launches\m2conf11321216025017061207.tmp -Dmaven.multiModuleProjectDirectory=C:\Users\ganon\Desktop\Library_System\demo -Dm2e.build.project.data.socket.port=49483 -Dfile.encoding=UTF-8 -XX:+ShowCodeDetailsInExceptionMessages org.codehaus.plexus.classworlds.launcher.Launcher -B -Dstyle.color=always clean
+
+Host: Intel(R) Core(TM) i5-8250U CPU @ 1.60GHz, 8 cores, 7G,  Windows 11 , 64 bit Build 22621 (10.0.22621.4391)
+Time: Sun Dec  1 15:27:04 2024  Windows 11 , 64 bit Build 22621 (10.0.22621.4391) elapsed time: 0.021493 seconds (0d 0h 0m 0s)
+
+---------------  T H R E A D  ---------------
+
+Current thread (0x000001d17694f060):  JavaThread "Unknown thread" [_thread_in_vm, id=8468, stack(0x00000039e3e00000,0x00000039e3f00000)]
+
+Stack: [0x00000039e3e00000,0x00000039e3f00000]
+Native frames: (J=compiled Java code, j=interpreted, Vv=VM code, C=native code)
+V  [jvm.dll+0x67741a]
+V  [jvm.dll+0x834434]
+V  [jvm.dll+0x835bde]
+V  [jvm.dll+0x836243]
+V  [jvm.dll+0x2457b5]
+V  [jvm.dll+0x674329]
+V  [jvm.dll+0x6689da]
+V  [jvm.dll+0x30489b]
+V  [jvm.dll+0x30bd96]
+V  [jvm.dll+0x35b57e]
+V  [jvm.dll+0x35b7af]
+V  [jvm.dll+0x2db778]
+V  [jvm.dll+0x2dc6e4]
+V  [jvm.dll+0x806131]
+V  [jvm.dll+0x369331]
+V  [jvm.dll+0x7e56ac]
+V  [jvm.dll+0x3eb35f]
+V  [jvm.dll+0x3ecea1]
+C  [jli.dll+0x5267]
+C  [ucrtbase.dll+0x29333]
+C  [KERNEL32.DLL+0x1259d]
+C  [ntdll.dll+0x5af38]
+
+
+---------------  P R O C E S S  ---------------
+
+Threads class SMR info:
+_java_thread_list=0x00007fff96985fd8, length=0, elements={
+}
+
+Java Threads: ( => current thread )
+
+Other Threads:
+  0x000001d1769ad420 GCTaskThread "GC Thread#0" [stack: 0x00000039e3f00000,0x00000039e4000000] [id=14268]
+  0x000001d1769bdf70 ConcurrentGCThread "G1 Main Marker" [stack: 0x00000039e4000000,0x00000039e4100000] [id=18252]
+  0x000001d1769be890 ConcurrentGCThread "G1 Conc#0" [stack: 0x00000039e4100000,0x00000039e4200000] [id=22820]
+
+[error occurred during error reporting (printing all threads), id 0xc0000005, EXCEPTION_ACCESS_VIOLATION (0xc0000005) at pc=0x00007fff9615c1e7]
+
+VM state: not at safepoint (not fully initialized)
+
+VM Mutex/Monitor currently owned by a thread:  ([mutex/lock_event])
+[0x000001d17694ac30] Heap_lock - owner thread: 0x000001d17694f060
+
+Heap address: 0x0000000081800000, size: 2024 MB, Compressed Oops mode: 32-bit
+
+CDS archive(s) mapped at: [0x0000000000000000-0x0000000000000000-0x0000000000000000), size 0, SharedBaseAddress: 0x0000000800000000, ArchiveRelocationMode: 0.
+Narrow klass base: 0x0000000000000000, Narrow klass shift: 0, Narrow klass range: 0x0
+
+GC Precious Log:
+<Empty>
+
+Heap:
+ garbage-first heap   total 0K, used 0K [0x0000000081800000, 0x0000000100000000)
+  region size 1024K, 0 young (0K), 0 survivors (0K)
+
+[error occurred during error reporting (printing heap information), id 0xc0000005, EXCEPTION_ACCESS_VIOLATION (0xc0000005) at pc=0x00007fff965406f9]
+
+GC Heap History (0 events):
+No events
+
+Dll operation events (1 events):
+Event: 0.012 Loaded shared library C:\pleiades\2022-12\java\17\bin\java.dll
+
+Deoptimization events (0 events):
+No events
+
+Classes unloaded (0 events):
+No events
+
+Classes redefined (0 events):
+No events
+
+Internal exceptions (0 events):
+No events
+
+VM Operations (0 events):
+No events
+
+Events (0 events):
+No events
+
+
+Dynamic libraries:
+0x00007ff6078f0000 - 0x00007ff6078fe000 	C:\pleiades\2022-12\java\17\bin\javaw.exe
+0x00007ff846b30000 - 0x00007ff846d47000 	C:\WINDOWS\SYSTEM32\ntdll.dll
+0x00007ff846900000 - 0x00007ff8469c4000 	C:\WINDOWS\System32\KERNEL32.DLL
+0x00007ff844040000 - 0x00007ff8443f9000 	C:\WINDOWS\System32\KERNELBASE.dll
+0x00007ff844400000 - 0x00007ff844511000 	C:\WINDOWS\System32\ucrtbase.dll
+0x00007ff824e50000 - 0x00007ff824e67000 	C:\pleiades\2022-12\java\17\bin\jli.dll
+0x00007ff824ac0000 - 0x00007ff824ad9000 	C:\pleiades\2022-12\java\17\bin\VCRUNTIME140.dll
+0x00007ff846310000 - 0x00007ff8464be000 	C:\WINDOWS\System32\USER32.dll
+0x00007ff843ea0000 - 0x00007ff843ec6000 	C:\WINDOWS\System32\win32u.dll
+0x00007ff829450000 - 0x00007ff8296e2000 	C:\WINDOWS\WinSxS\amd64_microsoft.windows.common-controls_6595b64144ccf1df_6.0.22621.4391_none_2715d37f73803e96\COMCTL32.dll
+0x00007ff844e60000 - 0x00007ff844e89000 	C:\WINDOWS\System32\GDI32.dll
+0x00007ff846850000 - 0x00007ff8468f7000 	C:\WINDOWS\System32\msvcrt.dll
+0x00007ff844680000 - 0x00007ff84479b000 	C:\WINDOWS\System32\gdi32full.dll
+0x00007ff8445e0000 - 0x00007ff84467a000 	C:\WINDOWS\System32\msvcp_win.dll
+0x00007ff846140000 - 0x00007ff846171000 	C:\WINDOWS\System32\IMM32.DLL
+0x00007ff824920000 - 0x00007ff82492c000 	C:\pleiades\2022-12\java\17\bin\vcruntime140_1.dll
+0x00007ff824580000 - 0x00007ff824611000 	C:\pleiades\2022-12\java\17\bin\msvcp140.dll
+0x00007fff95e70000 - 0x00007fff96ab7000 	C:\pleiades\2022-12\java\17\bin\server\jvm.dll
+0x00007ff846790000 - 0x00007ff846842000 	C:\WINDOWS\System32\ADVAPI32.dll
+0x00007ff8456d0000 - 0x00007ff845777000 	C:\WINDOWS\System32\sechost.dll
+0x00007ff8447a0000 - 0x00007ff8447c8000 	C:\WINDOWS\System32\bcrypt.dll
+0x00007ff844850000 - 0x00007ff844964000 	C:\WINDOWS\System32\RPCRT4.dll
+0x00007fffeaf80000 - 0x00007fffeaf89000 	C:\WINDOWS\SYSTEM32\WSOCK32.dll
+0x00007ff83ea40000 - 0x00007ff83ea74000 	C:\WINDOWS\SYSTEM32\WINMM.dll
+0x00007ff845020000 - 0x00007ff845091000 	C:\WINDOWS\System32\WS2_32.dll
+0x00007ff83b440000 - 0x00007ff83b44a000 	C:\WINDOWS\SYSTEM32\VERSION.dll
+0x00007ff842f20000 - 0x00007ff842f38000 	C:\WINDOWS\SYSTEM32\kernel.appcore.dll
+0x00007ff824eb0000 - 0x00007ff824eba000 	C:\pleiades\2022-12\java\17\bin\jimage.dll
+0x00007ff83bc90000 - 0x00007ff83bec2000 	C:\WINDOWS\SYSTEM32\DBGHELP.DLL
+0x00007ff844970000 - 0x00007ff844cff000 	C:\WINDOWS\System32\combase.dll
+0x00007ff844e90000 - 0x00007ff844f67000 	C:\WINDOWS\System32\OLEAUT32.dll
+0x00007ff83bbb0000 - 0x00007ff83bbe2000 	C:\WINDOWS\SYSTEM32\dbgcore.DLL
+0x00007ff8447d0000 - 0x00007ff84484b000 	C:\WINDOWS\System32\bcryptPrimitives.dll
+0x00007ff824e70000 - 0x00007ff824e95000 	C:\pleiades\2022-12\java\17\bin\java.dll
+
+dbghelp: loaded successfully - version: 4.0.5 - missing functions: none
+symbol engine: initialized successfully - sym options: 0x614 - pdb path: .;C:\pleiades\2022-12\java\17\bin;C:\WINDOWS\SYSTEM32;C:\WINDOWS\WinSxS\amd64_microsoft.windows.common-controls_6595b64144ccf1df_6.0.22621.4391_none_2715d37f73803e96;C:\pleiades\2022-12\java\17\bin\server
+
+VM Arguments:
+jvm_args: -Dmaven.home=EMBEDDED -Dclassworlds.conf=C:\pleiades\2022-12\workspace\.metadata\.plugins\org.eclipse.m2e.launching\launches\m2conf11321216025017061207.tmp -Dmaven.multiModuleProjectDirectory=C:\Users\ganon\Desktop\Library_System\demo -Dm2e.build.project.data.socket.port=49483 -Dfile.encoding=UTF-8 -XX:+ShowCodeDetailsInExceptionMessages 
+java_command: org.codehaus.plexus.classworlds.launcher.Launcher -B -Dstyle.color=always clean
+java_class_path (initial): C:\pleiades\2022-12\eclipse\plugins\org.eclipse.m2e.maven.runtime_3.8.604.20221130-2149\jars\plexus-classworlds-2.6.0.jar
+Launcher Type: SUN_STANDARD
+
+[Global flags]
+     intx CICompilerCount                          = 4                                         {product} {ergonomic}
+     uint ConcGCThreads                            = 2                                         {product} {ergonomic}
+     uint G1ConcRefinementThreads                  = 8                                         {product} {ergonomic}
+   size_t G1HeapRegionSize                         = 1048576                                   {product} {ergonomic}
+    uintx GCDrainStackTargetSize                   = 64                                        {product} {ergonomic}
+   size_t InitialHeapSize                          = 134217728                                 {product} {ergonomic}
+   size_t MarkStackSize                            = 4194304                                   {product} {ergonomic}
+   size_t MaxHeapSize                              = 2122317824                                {product} {ergonomic}
+   size_t MinHeapDeltaBytes                        = 1048576                                   {product} {ergonomic}
+   size_t MinHeapSize                              = 8388608                                   {product} {ergonomic}
+    uintx NonNMethodCodeHeapSize                   = 5839372                                {pd product} {ergonomic}
+    uintx NonProfiledCodeHeapSize                  = 122909434                              {pd product} {ergonomic}
+    uintx ProfiledCodeHeapSize                     = 122909434                              {pd product} {ergonomic}
+    uintx ReservedCodeCacheSize                    = 251658240                              {pd product} {ergonomic}
+     bool SegmentedCodeCache                       = true                                      {product} {ergonomic}
+     bool ShowCodeDetailsInExceptionMessages       = true                                   {manageable} {command line}
+   size_t SoftMaxHeapSize                          = 2122317824                             {manageable} {ergonomic}
+     bool UseCompressedClassPointers               = true                           {product lp64_product} {ergonomic}
+     bool UseCompressedOops                        = true                           {product lp64_product} {ergonomic}
+     bool UseG1GC                                  = true                                      {product} {ergonomic}
+     bool UseLargePagesIndividualAllocation        = false                                  {pd product} {ergonomic}
+
+Logging:
+Log output configuration:
+ #0: stdout all=warning uptime,level,tags
+ #1: stderr all=off uptime,level,tags
+
+Environment Variables:
+PATH=C:/pleiades/2022-12/java/17/bin/server;C:/pleiades/2022-12/java/17/bin;C:\Program Files (x86)\Razer Chroma SDK\bin;C:\Program Files\Razer Chroma SDK\bin;C:\Program Files (x86)\Razer\ChromaBroadcast\bin;C:\Program Files\Razer\ChromaBroadcast\bin;C:\Program Files\Common Files\Oracle\Java\javapath;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files (x86)\Intel\Intel(R) Management Engine Components\DAL;C:\Program Files\Intel\Intel(R) Management Engine Components\DAL;C:\Program Files (x86)\VAIO\VAIO BIOS Data Transfer Utility\;C:\Program Files (x86)\Windows Kits\10\Windows Performance Toolkit\;C:\Program Files\Git\cmd;C:\Program Files\dotnet\;C:\Users\ganon\AppData\Local\Pub\Cache\bin;C:\WINDOWS\system32\config\systemprofile\AppData\Local\Microsoft\WindowsApps;C:\Program Files\MySQL\MySQL Shell 8.0\bin\;C:\Users\ganon\AppData\Local\Programs\Python\Python312\Scripts\;C:\Users\ganon\AppData\Local\Programs\Python\Python312\;C:\Users\ganon\AppData\Local\Programs\Python\Launcher\;C:\Users\ganon\AppData\Local\Microsoft\WindowsApps;C:\Users\ganon\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\ganon\.dotnet\tools;C:\Users\ganon\AppData\Local\Microsoft\WinGet\Links;C:\node-v20.13.1-win-x64;C:\flutter_windows_3.22.1-stable\flutter\bin;C:\Users\ganon\AppData\Local\Microsoft\WindowsApps\python.exe;C:\Program Files (x86)\Android\android-sdk\platform-tools;C:\pleiades\2022-12\eclipse;
+USERNAME=ganon
+OS=Windows_NT
+PROCESSOR_IDENTIFIER=Intel64 Family 6 Model 142 Stepping 10, GenuineIntel
+TMP=C:\Users\ganon\AppData\Local\Temp
+TEMP=C:\Users\ganon\AppData\Local\Temp
+
+
+
+---------------  S Y S T E M  ---------------
+
+OS:
+ Windows 11 , 64 bit Build 22621 (10.0.22621.4391)
+OS uptime: 1 days 22:32 hours
+Hyper-V role detected
+
+CPU: total 8 (initial active 8) (4 cores per cpu, 2 threads per core) family 6 model 142 stepping 10 microcode 0xf4, cx8, cmov, fxsr, ht, mmx, 3dnowpref, sse, sse2, sse3, ssse3, sse4.1, sse4.2, popcnt, lzcnt, tsc, tscinvbit, avx, avx2, aes, erms, clmul, bmi1, bmi2, adx, fma, vzeroupper, clflush, clflushopt, hv
+
+Memory: 4k page, system-wide physical 8088M (582M free)
+TotalPageFile size 13088M (AvailPageFile size 105M)
+current process WorkingSet (physical memory assigned to process): 11M, peak: 11M
+current process commit charge ("private bytes"): 60M, peak: 188M
+
+vm_info: OpenJDK 64-Bit Server VM (17.0.6+10) for windows-amd64 JRE (17.0.6+10), built on Jan 18 2023 10:08:59 by "temurin" with MS VC++ 16.7 (VS2019)
+
+END.
