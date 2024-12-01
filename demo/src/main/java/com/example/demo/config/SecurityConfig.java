@@ -39,12 +39,12 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/", "/login", "/register", "/css/**", "/js/**").permitAll() // 認証不要のパス
+                .requestMatchers("/","/login", "/register", "/css/**", "/js/**").permitAll() // 認証不要のパス
                 .anyRequest().authenticated() // その他は認証が必要
             )
             .formLogin(form -> form
                 .loginPage("/login") // カスタムログインページ
-                .defaultSuccessUrl("/api/dashboard", true) // ログイン成功後の遷移先
+                .defaultSuccessUrl("/", true) // ログイン成功後の遷移先
                 .failureUrl("/login?error=true") // ログイン失敗時のリダイレクト先
                 .permitAll()
             )
