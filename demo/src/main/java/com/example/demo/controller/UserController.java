@@ -3,8 +3,8 @@ package com.example.demo.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -26,24 +26,36 @@ public class UserController {
         this.passwordEncoder = passwordEncoder;
     }
 
+    // ユーザー登録フォームの表示
+    @GetMapping("/register")
+    public String showRegistrationForm() {
+        return "register"; // templates/register.htmlを表示
+    }
+
     // 新規登録処理
-    @PostMapping("/add") // このメソッドが /users/add にマッピングされる
-    public String registerUser(@Valid User user, BindingResult result, Model model) {
+    @PostMapping("/add")
+    public String registerUser(@Valid User user, BindingResult result) {
+        // バリデーションエラーがある場合
         if (result.hasErrors()) {
-            return "register"; // エラーがあれば再度登録画面を表示
+            return "redirect:/register?error=validation"; // バリデーションエラー時にリダイレクト
         }
 
         // ユーザー名の重複チェック
         if (userService.existsByUsername(user.getUsername())) {
-            model.addAttribute("error", "ユーザー名が既に存在しています");
-            return "register";
+            return "redirect:/register?error=duplicate"; // ユーザー名重複時にリダイレクト
         }
 
         // パスワードの暗号化と保存
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userService.saveUser(user);
 
-        return "redirect:/login?register=true"; // 登録成功後、ログインページへリダイレクト
+        // 登録成功後にログインページへリダイレクト
+        return "redirect:/login?register=true";
+    }
 
+    // ログインページの表示
+    @GetMapping("/login")
+    public String showLoginPage() {
+        return "login"; // templates/login.htmlを表示
     }
 }

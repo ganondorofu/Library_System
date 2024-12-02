@@ -38,14 +38,15 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
+            .csrf(csrf -> csrf.disable()) // 必要に応じてCSRFを無効化（開発環境用）
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/","/login", "/register", "/css/**", "/js/**").permitAll() // 認証不要のパス
-                .anyRequest().authenticated() // その他は認証が必要
+                .requestMatchers("/login", "/register","/users/**", "/css/**", "/js/**").permitAll() // 認証不要のパス
+                .anyRequest().authenticated() // それ以外のリクエストは認証が必要
             )
             .formLogin(form -> form
                 .loginPage("/login") // カスタムログインページ
                 .defaultSuccessUrl("/", true) // ログイン成功後の遷移先
-                .failureUrl("/login?error=true") // ログイン失敗時のリダイレクト先
+                .failureUrl("/login?error") // ログイン失敗時のリダイレクト先
                 .permitAll()
             )
             .logout(logout -> logout

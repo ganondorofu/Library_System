@@ -19,4 +19,8 @@ public class MainController {
     public String register() {
         return "register"; // templates/register.htmlをレンダリング
     }
+    @GetMapping("/error")
+    public String error() {
+        return "error"; // templates/register.htmlをレンダリング
+    }
 }

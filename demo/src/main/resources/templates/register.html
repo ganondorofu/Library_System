@@ -21,6 +21,9 @@
         <div>
             <button type="submit">登録</button>
         </div>
+        <div>
+		      <p th:if="${param.error}" style="color: red;">登録中にエラーが発生しました。</p>
+		</div>
     </form>
 </body>
 </html>
