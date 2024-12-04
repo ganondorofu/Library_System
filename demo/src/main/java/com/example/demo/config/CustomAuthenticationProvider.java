@@ -20,40 +20,31 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
 
-    // PasswordEncoderを直接インスタンス化
     public CustomAuthenticationProvider(UserService userService) {
         this.userService = userService;
-        this.passwordEncoder = new BCryptPasswordEncoder(); // PasswordEncoderを直接初期化
+        this.passwordEncoder = new BCryptPasswordEncoder();
     }
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-        String username = authentication.getName(); // 入力されたユーザー名を取得
-        String password = authentication.getCredentials().toString(); // 入力されたパスワードを取得
+        String username = authentication.getName();
+        String password = authentication.getCredentials().toString();
 
-        // ユーザー名でユーザー情報を取得
         UserDetails userDetails = userService.loadUserByUsername(username);
 
-        // アカウントがロックされている場合
         if (((User) userDetails).isLocked()) {
             throw new DisabledException("Account is locked");
         }
 
-        // パスワードが一致しない場合
         if (!passwordEncoder.matches(password, userDetails.getPassword())) {
-            userService.increaseFailedAttempts(username); // ログイン失敗回数を増加
+            userService.increaseFailedAttempts(username);
             throw new BadCredentialsException("Invalid credentials");
         }
 
-        // 認証成功時に失敗回数をリセット
         userService.resetFailedAttempts(username);
 
-        // 認証トークンを作成して返却
         return new UsernamePasswordAuthenticationToken(
-                username,
-                null,
-                userDetails.getAuthorities()
-        );
+                username, null, userDetails.getAuthorities());
     }
 
     @Override
