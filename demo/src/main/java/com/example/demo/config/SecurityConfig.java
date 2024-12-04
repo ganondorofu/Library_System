@@ -7,7 +7,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -41,15 +40,16 @@ public class SecurityConfig {
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
-        // カスタムプロバイダを登録
+    public AuthenticationManager authenticationManager() {
+        // カスタムプロバイダを優先的に登録
         return new ProviderManager(List.of(customAuthenticationProvider, daoAuthenticationProvider()));
     }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            .csrf(csrf -> csrf.disable()) // 必要に応じてCSRFを無効化（開発環境用）
+            // 必要に応じてCSRFを無効化（開発環境用）。本番環境では有効化すること。
+            .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/login", "/register", "/users/**", "/css/**", "/js/**").permitAll() // 認証不要のパス
                 .anyRequest().authenticated() // それ以外のリクエストは認証が必要

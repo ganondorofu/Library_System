@@ -75,4 +75,5 @@ public class UserService implements UserDetailsService {
         user.setFailedLoginAttempts(0);
         userRepository.save(user);
     }
+    
 }
