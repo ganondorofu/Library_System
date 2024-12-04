@@ -20,7 +20,6 @@ public class SecurityConfig {
     private final UserService userService;
     private final CustomAuthenticationProvider customAuthenticationProvider;
 
-    // コンストラクタインジェクションでUserServiceとCustomAuthenticationProviderを注入
     public SecurityConfig(UserService userService, CustomAuthenticationProvider customAuthenticationProvider) {
         this.userService = userService;
         this.customAuthenticationProvider = customAuthenticationProvider;
@@ -28,41 +27,39 @@ public class SecurityConfig {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder(); // BCryptでパスワードを暗号化
+        return new BCryptPasswordEncoder();
     }
 
     @Bean
     public DaoAuthenticationProvider daoAuthenticationProvider() {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
-        provider.setUserDetailsService(userService); // UserServiceを設定
+        provider.setUserDetailsService(userService);
         provider.setPasswordEncoder(passwordEncoder());
         return provider;
     }
 
     @Bean
     public AuthenticationManager authenticationManager() {
-        // カスタムプロバイダを優先的に登録
         return new ProviderManager(List.of(customAuthenticationProvider, daoAuthenticationProvider()));
     }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            // 必要に応じてCSRFを無効化（開発環境用）。本番環境では有効化すること。
             .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/login", "/register", "/users/**", "/css/**", "/js/**").permitAll() // 認証不要のパス
-                .anyRequest().authenticated() // それ以外のリクエストは認証が必要
+                .requestMatchers("/login", "/register", "/users/**", "/css/**", "/js/**").permitAll()
+                .anyRequest().authenticated()
             )
             .formLogin(form -> form
-                .loginPage("/login") // カスタムログインページ
-                .defaultSuccessUrl("/", true) // ログイン成功後の遷移先
-                .failureUrl("/login?error") // ログイン失敗時のリダイレクト先
+                .loginPage("/login")
+                .defaultSuccessUrl("/", true)
+                .failureUrl("/login?error")
                 .permitAll()
             )
             .logout(logout -> logout
                 .logoutUrl("/logout")
-                .logoutSuccessUrl("/login?logout=true") // ログアウト後のリダイレクト先
+                .logoutSuccessUrl("/login?logout=true")
                 .permitAll()
             );
 
