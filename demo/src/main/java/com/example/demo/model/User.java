@@ -148,6 +148,7 @@ public class User implements UserDetails {
     }
 
     public void setFailedLoginAttempts(int failedLoginAttempts) {
+    	System.out.println("Added");
         this.failedLoginAttempts = failedLoginAttempts;
     }
 
