@@ -1,10 +1,10 @@
 package com.example.demo.service;
 
-
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.demo.model.User;
 import com.example.demo.repository.UserRepository;
@@ -43,20 +43,28 @@ public class UserService implements UserDetailsService {
     }
 
     // ログイン失敗時に失敗回数を増加させるメソッド
+    @Transactional
     public void increaseFailedAttempts(String username) {
+        System.out.println("increaseFailedAttempts called for user: " + username);
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with username: " + username));
-
+        
+        System.out.println("Current failed attempts: " + user.getFailedLoginAttempts());
+        
         user.setFailedLoginAttempts(user.getFailedLoginAttempts() + 1);
 
         if (user.getFailedLoginAttempts() >= 5) { // 失敗回数が規定値を超えたらロック
             user.setLocked(true);
+            System.out.println("User locked: " + username);
         }
 
         userRepository.save(user);
+        System.out.println("Failed attempts updated to: " + user.getFailedLoginAttempts());
     }
 
+
     // ログイン成功時に失敗回数をリセットするメソッド
+    @Transactional
     public void resetFailedAttempts(String username) {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with username: " + username));
@@ -67,6 +75,7 @@ public class UserService implements UserDetailsService {
     }
 
     // アカウントのロックを解除する管理者向けメソッド
+    @Transactional
     public void unlockAccount(String username) {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with username: " + username));
@@ -75,5 +84,4 @@ public class UserService implements UserDetailsService {
         user.setFailedLoginAttempts(0);
         userRepository.save(user);
     }
-    
 }
