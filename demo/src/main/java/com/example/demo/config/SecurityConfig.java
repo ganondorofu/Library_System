@@ -26,25 +26,29 @@ public class SecurityConfig {
         this.customAuthenticationProvider = customAuthenticationProvider;
     }
 
+    // PasswordEncoderを定義（BCryptでパスワードを暗号化）
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder(); // BCryptでパスワードを暗号化
     }
 
+    // DaoAuthenticationProviderの設定（デフォルトのユーザー認証用プロバイダ）
     @Bean
     public DaoAuthenticationProvider daoAuthenticationProvider() {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
         provider.setUserDetailsService(userService); // UserServiceを設定
-        provider.setPasswordEncoder(passwordEncoder());
+        provider.setPasswordEncoder(passwordEncoder()); // パスワードエンコーダを設定
         return provider;
     }
 
+    // カスタム認証プロバイダを優先的に登録したAuthenticationManager
     @Bean
     public AuthenticationManager authenticationManager() {
-        // カスタムプロバイダを優先的に登録
+        // カスタム認証プロバイダとデフォルトの認証プロバイダを両方使用
         return new ProviderManager(List.of(customAuthenticationProvider, daoAuthenticationProvider()));
     }
 
+    // セキュリティの設定（HttpSecurityの設定）
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
@@ -58,12 +62,12 @@ public class SecurityConfig {
                 .loginPage("/login") // カスタムログインページ
                 .defaultSuccessUrl("/", true) // ログイン成功後の遷移先
                 .failureUrl("/login?error") // ログイン失敗時のリダイレクト先
-                .permitAll()
+                .permitAll() // 認証不要の設定
             )
             .logout(logout -> logout
-                .logoutUrl("/logout")
+                .logoutUrl("/logout") // ログアウトURL
                 .logoutSuccessUrl("/login?logout=true") // ログアウト後のリダイレクト先
-                .permitAll()
+                .permitAll() // ログアウト処理は全員アクセス可
             );
 
         return http.build();

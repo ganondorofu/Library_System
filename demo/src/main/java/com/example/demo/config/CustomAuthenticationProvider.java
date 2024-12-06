@@ -28,11 +28,13 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
+    	System.out.println("login");
         String username = authentication.getName(); // 入力されたユーザー名を取得
         String password = authentication.getCredentials().toString(); // 入力されたパスワードを取得
 
         // ユーザー名でユーザー情報を取得
         UserDetails userDetails = userService.loadUserByUsername(username);
+        
 
         // アカウントがロックされている場合
         if (((User) userDetails).isLocked()) {
@@ -41,6 +43,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 
         // パスワードが一致しない場合
         if (!passwordEncoder.matches(password, userDetails.getPassword())) {
+        	System.out.println("miss");
             userService.increaseFailedAttempts(username); // ログイン失敗回数を増加
             throw new BadCredentialsException("Invalid credentials");
         }
