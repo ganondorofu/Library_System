@@ -6,7 +6,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -31,20 +30,11 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
-    // DaoAuthenticationProviderの設定（デフォルトのユーザー認証用プロバイダ）
-    @Bean
-    public DaoAuthenticationProvider daoAuthenticationProvider() {
-        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
-        provider.setUserDetailsService(userService); // UserServiceを設定
-        provider.setPasswordEncoder(passwordEncoder());
-        return provider;
-    }
-
     // カスタム認証プロバイダを優先的に登録したAuthenticationManager
     @Bean
     public AuthenticationManager authenticationManager() {
         // カスタムプロバイダを優先的に登録
-        return new ProviderManager(List.of(customAuthenticationProvider, daoAuthenticationProvider()));
+        return new ProviderManager(List.of(customAuthenticationProvider));
     }
 
     // セキュリティの設定（HttpSecurityの設定）
@@ -66,6 +56,12 @@ public class SecurityConfig {
                 .logoutUrl("/logout")
                 .logoutSuccessUrl("/login?logout=true") // ログアウト後のリダイレクト先
                 .permitAll()
+            );
+
+        // POST メソッドでログイン処理
+        http
+            .formLogin(form -> form
+                .loginProcessingUrl("/signin") // POST リクエストを受け付けるエンドポイントを指定
             );
 
         return http.build();
