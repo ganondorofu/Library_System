@@ -45,7 +45,6 @@ public class UserService implements UserDetailsService {
     // ログイン失敗時に失敗回数を増加させるメソッド
     @Transactional
     public void increaseFailedAttempts(String username) {
-        System.out.println("increaseFailedAttempts called for user: " + username);
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with username: " + username));
         
