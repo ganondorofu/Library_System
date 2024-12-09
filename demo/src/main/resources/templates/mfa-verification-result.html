@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>MFA Verification Result</title>
+</head>
+<body>
+    <h1>MFA Verification</h1>
+    <div>
+        <p th:if="${isVerified}" th:text="'MFA verification succeeded.'"></p>
+        <p th:if="${!isVerified}" th:text="'MFA verification failed. Please try again.'"></p>
+    </div>
+    <a href="/">Back to Home</a>
+</body>
+</html>
