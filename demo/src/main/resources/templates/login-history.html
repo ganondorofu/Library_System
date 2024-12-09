@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ログイン履歴</title>
+</head>
+<body>
+    <h1>ログイン履歴</h1>
+
+    <table border="1" style="width: 100%; border-collapse: collapse;">
+        <thead>
+            <tr>
+                <th>ログイン時刻</th>
+                <th>IPアドレス</th>
+                <th>デバイス情報</th>
+                <th>ログイン結果</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- ログイン履歴をループして表示 -->
+            <tr th:each="history : ${loginHistories}">
+                <td th:text="${history.loginTime}"></td>
+                <td th:text="${history.ipAddress}"></td>
+                <td th:text="${history.deviceInfo}"></td>
+                <td th:text="${history.loginSuccess ? '成功' : '失敗'}"></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="/dashboard">ダッシュボードに戻る</a>
+</body>
+</html>

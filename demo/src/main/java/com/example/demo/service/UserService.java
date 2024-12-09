@@ -26,6 +26,11 @@ public class UserService implements UserDetailsService {
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with username: " + username));
         return user;
     }
+    // ユーザー名で検索
+    public User findByUsername(String username) {
+        return userRepository.findByUsername(username)
+            .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
+    }
 
     // 新規ユーザー登録のためにユーザーを保存するメソッド
     public void saveUser(User user) {
