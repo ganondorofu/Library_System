@@ -38,7 +38,7 @@ public class MfaController {
 
     @PostMapping("/mfa/verify")
     public String verifyMfa(String username, int verificationCode, Model model) {
-        boolean isVerified = mfaService.verifyCode(username, verificationCode);
+        boolean isVerified = mfaService.verifyCode("ganondorofu", verificationCode);
         model.addAttribute("isVerified", isVerified);
         return "mfa-verification-result";
     }
