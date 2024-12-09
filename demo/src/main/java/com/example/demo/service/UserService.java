@@ -83,4 +83,11 @@ public class UserService implements UserDetailsService {
         user.setFailedLoginAttempts(0);
         userRepository.save(user);
     }
+    
+    // ロールを確認するメソッド
+    public String getUserRole(String username) {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found with username: " + username));
+        return user.getRole(); // Userモデルのroleフィールドを返す
+    }
 }

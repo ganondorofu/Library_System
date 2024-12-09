@@ -17,6 +17,7 @@ import com.example.demo.model.LoginHistory;
 import com.example.demo.model.User;
 import com.example.demo.service.LoginHistoryService;
 import com.example.demo.service.UserService;
+import com.example.demo.utility.MfaUtil;
 
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -41,18 +42,17 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         String username = authentication.getName(); // 入力されたユーザー名を取得
         String password = authentication.getCredentials().toString(); // 入力されたパスワードを取得
+        String mfaCode = request.getParameter("mfa"); // フォームからMFAコードを取得
 
         UserDetails userDetails = userService.loadUserByUsername(username);
 
         if (userDetails == null) {
-            // ログイン失敗の履歴を記録
             saveLoginHistory(null, false);
             throw new BadCredentialsException("User not found");
         }
 
         // アカウントがロックされている場合
         if (((User) userDetails).isLocked()) {
-            // ログイン失敗の履歴を記録
             saveLoginHistory((User) userDetails, false);
             throw new DisabledException("Account is locked");
         }
@@ -60,16 +60,32 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
         // パスワードが一致しない場合
         if (!passwordEncoder.matches(password, userDetails.getPassword())) {
             userService.increaseFailedAttempts(username); // ログイン失敗回数を増加
-            saveLoginHistory((User) userDetails, false); // ログイン失敗の履歴を記録
+            saveLoginHistory((User) userDetails, false);
             throw new BadCredentialsException("Invalid credentials");
         }
 
+        // MFA認証が有効で、シークレットキーが設定されている場合
+        User user = (User) userDetails;
+        if (user.getMfaSecret() != null && !user.getMfaSecret().isEmpty()) {
+        	if (user.getMfaSecret() != null && !user.getMfaSecret().isEmpty()) {
+        	    if (mfaCode == null || mfaCode.trim().isEmpty()) {
+        	        saveLoginHistory(user, false);
+        	        throw new BadCredentialsException("MFA code is required. Please enter your MFA code.");
+        	    }
+        	    if (!MfaUtil.verifyCode(user.getMfaSecret(), Integer.parseInt(mfaCode))) {
+        	        saveLoginHistory(user, false);
+        	        throw new BadCredentialsException("Invalid MFA code. Please try again.");
+        	    }
+        	}
+
+
         // ログイン成功時
         userService.resetFailedAttempts(username);
-        saveLoginHistory((User) userDetails, true);
+        saveLoginHistory(user, true);
 
+    }
         return new UsernamePasswordAuthenticationToken(
-                username, null, userDetails.getAuthorities());
+        		username, null, userDetails.getAuthorities());
     }
 
     @Override

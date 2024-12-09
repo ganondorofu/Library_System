@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>ユーザー向けダッシュボード</title>
+</head>
+<body>
+    <h1>ユーザー用ダッシュボード</h1>
+    <p>こんにちは、一般ユーザーのためのダッシュボードです。</p>
+
+    <!-- 貸出履歴リンク -->
+    <div>
+        <h2>貸出履歴</h2>
+        <p>現在の貸出状況を確認できます。</p>
+        <a th:href="@{/user/loan-history}">貸出履歴を見る</a>
+    </div>
+
+    <!-- 予約状況リンク -->
+    <div>
+        <h2>予約状況</h2>
+        <p>現在予約している書籍を確認できます。</p>
+        <a th:href="@{/user/reservations}">予約状況を見る</a>
+    </div>
+</body>
+</html>

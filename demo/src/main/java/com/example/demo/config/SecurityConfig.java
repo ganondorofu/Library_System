@@ -43,27 +43,24 @@ public class SecurityConfig {
         http
             .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/login", "/register", "/users/**", "/css/**", "/js/**").permitAll()
+                .requestMatchers("/signin", "/login", "/register", "/css/**", "/js/**").permitAll()
                 .anyRequest().authenticated()
             )
             .formLogin(form -> form
-                .loginPage("/login") // カスタムログインページ
-                .defaultSuccessUrl("/", true) // ログイン成功後の遷移先
-                .failureUrl("/login?error") // ログイン失敗時のリダイレクト先
+                .loginPage("/login")
+                .defaultSuccessUrl("/dashboard", true) // 強制リダイレクト設定
+                .failureUrl("/login?error=true")
                 .permitAll()
             )
             .logout(logout -> logout
                 .logoutUrl("/logout")
-                .logoutSuccessUrl("/login?logout=true") // ログアウト後のリダイレクト先
+                .logoutSuccessUrl("/login?logout=true")
                 .permitAll()
-            );
-
-        // POST メソッドでログイン処理
-        http
-            .formLogin(form -> form
-                .loginProcessingUrl("/signin") // POST リクエストを受け付けるエンドポイントを指定
             );
 
         return http.build();
     }
+
+
+
 }
