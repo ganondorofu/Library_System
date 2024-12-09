@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>管理者向けダッシュボード</title>
+</head>
+<body>
+    <h1>管理者用ダッシュボード</h1>
+    <p>こんにちは、管理者のためのダッシュボードです。</p>
+
+    <!-- システム統計情報 -->
+    <div>
+        <h2>システム統計情報</h2>
+        <p>登録ユーザー数: <span th:text="${totalUsers}"></span></p>
+        <p>登録書籍数: <span th:text="${totalBooks}"></span></p>
+        <p>現在貸出中の書籍数: <span th:text="${activeLoans}"></span></p>
+        <p>現在予約中の書籍数: <span th:text="${activeReservations}"></span></p>
+    </div>
+
+    <!-- 管理リンク -->
+    <div>
+        <h2>管理リンク</h2>
+        <ul>
+            <li><a th:href="@{/admin/books}">書籍管理</a></li>
+            <li><a th:href="@{/admin/users}">ユーザー管理</a></li>
+            <li><a th:href="@{/admin/logs}">システムログ</a></li>
+        </ul>
+    </div>
+</body>
+</html>

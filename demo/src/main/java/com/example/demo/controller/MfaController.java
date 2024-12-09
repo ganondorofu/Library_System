@@ -54,15 +54,7 @@ public class MfaController {
             return "error";
         }
     }
-
-    /**
-     * MFAコードの検証処理
-     *
-     * @param authentication ログイン情報
-     * @param verificationCode 入力されたMFAコード
-     * @param model モデル
-     * @return 検証結果画面
-     */
+    
     @PostMapping("/mfa/verify")
     public String verifyMfa(
             Authentication authentication,

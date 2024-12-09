@@ -76,6 +76,16 @@ public class User implements UserDetails {
     public String getPassword() {
         return password;
     }
+    
+    public String getRole() {
+        if (this.role == "1") {
+            return "ROLE_ADMIN";
+        } else {
+            return "ROLE_USER";
+        }
+    }
+
+
 
     @Override
     public String getUsername() {
