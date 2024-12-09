@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>MFA セットアップ</title>
+</head>
+<body>
+    <h1>MFA セットアップ</h1>
+    <p>以下のQRコードをGoogle Authenticatorでスキャンしてください。</p>
+    <img th:src="'data:image/png;base64,' + ${qrCodeImage}" alt="QR Code"/>
+    <p>シークレットキー: <strong th:text="${secretKey}"></strong></p>
+
+    <form action="/mfa/verify" method="post">
+        <input type="hidden" name="username" th:value="${username}"/>
+        <label for="verificationCode">認証コードを入力:</label>
+        <input type="text" id="verificationCode" name="verificationCode" required/>
+        <button type="submit">確認</button>
+    </form>
+</body>
+</html>
