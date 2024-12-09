@@ -1,6 +1,9 @@
 package com.example.demo.service;
 
+import java.util.concurrent.ConcurrentHashMap;
+
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.demo.model.User;
 import com.example.demo.repository.UserRepository;
@@ -10,30 +13,59 @@ import com.example.demo.utility.MfaUtil;
 public class MfaService {
 
     private final UserRepository userRepository;
+    private final ConcurrentHashMap<String, String> temporarySecrets = new ConcurrentHashMap<>();
 
     public MfaService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
-    public String generateAndSaveSecretKey(String username) {
+    /**
+     * 一時的なシークレットキーを生成し、キャッシュに保存
+     */
+    public String generateTemporarySecretKey(String username) {
         String secretKey = MfaUtil.generateSecretKey();
-
-        // データベースにシークレットキーを保存
-        userRepository.updateMfaSecret(username, secretKey);
-
+        temporarySecrets.put(username, secretKey);
         return secretKey;
     }
 
-    public boolean verifyCode(String username, int verificationCode) {
-        User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new RuntimeException("User not found: " + username));
+    /**
+     * MFAコードの検証とシークレットキーの保存
+     */
+    @Transactional
+    public boolean verifyAndSaveSecretKey(String username, int verificationCode) {
+        // 一時的なシークレットキーを取得
+        String temporarySecretKey = temporarySecrets.get(username);
 
-        String secretKey = user.getMfaSecret();
-        if (secretKey == null) {
-            throw new RuntimeException("Secret key not found for user: " + username);
+        if (temporarySecretKey == null) {
+            throw new MfaSecretNotFoundException("Temporary MFA secret key not found for user: " + username);
         }
 
-        return MfaUtil.verifyCode(secretKey, verificationCode);
+        // コードを検証
+        if (!MfaUtil.verifyCode(temporarySecretKey, verificationCode)) {
+            return false;
+        }
+
+        // ユーザーを取得し、シークレットキーを保存
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new UserNotFoundException("User not found: " + username));
+
+        user.setMfaSecret(temporarySecretKey);
+        userRepository.save(user);
+
+        // 一時的なキーを削除
+        temporarySecrets.remove(username);
+        return true;
+    }
+
+    public static class UserNotFoundException extends RuntimeException {
+        public UserNotFoundException(String message) {
+            super(message);
+        }
+    }
+
+    public static class MfaSecretNotFoundException extends RuntimeException {
+        public MfaSecretNotFoundException(String message) {
+            super(message);
+        }
     }
 }
-
