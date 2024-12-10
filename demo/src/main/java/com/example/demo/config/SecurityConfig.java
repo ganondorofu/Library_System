@@ -27,7 +27,7 @@ public class SecurityConfig {
     // PasswordEncoderを定義（BCryptでパスワードを暗号化）
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
+        return new BCryptPasswordEncoder(); 
     }
 
     // カスタム認証プロバイダを優先的に登録したAuthenticationManager
@@ -42,9 +42,9 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
             .csrf(csrf -> csrf.disable())
-            .authorizeHttpRequests(auth -> auth
+            .authorizeRequests(auth -> auth
                 .requestMatchers("/login", "/register", "/users/**", "/css/**", "/js/**").permitAll()
-                .anyRequest().authenticated()
+                .anyRequest().authenticated()  // 他のすべてのリクエストは認証が必要
             )
             .formLogin(form -> form
                 .loginPage("/login") // カスタムログインページ
@@ -56,10 +56,7 @@ public class SecurityConfig {
                 .logoutUrl("/logout")
                 .logoutSuccessUrl("/login?logout=true") // ログアウト後のリダイレクト先
                 .permitAll()
-            );
-
-        // POST メソッドでログイン処理
-        http
+            )
             .formLogin(form -> form
                 .loginProcessingUrl("/signin") // POST リクエストを受け付けるエンドポイントを指定
             );

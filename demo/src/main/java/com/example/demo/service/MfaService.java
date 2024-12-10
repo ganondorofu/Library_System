@@ -8,10 +8,12 @@ import org.springframework.transaction.annotation.Transactional;
 import com.example.demo.model.User;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.utility.MfaUtil;
+import com.warrenstrange.googleauth.GoogleAuthenticator;
 
 @Service
 public class MfaService {
 
+    private static final GoogleAuthenticator gAuth = new GoogleAuthenticator();
     private final UserRepository userRepository;
     private final ConcurrentHashMap<String, String> temporarySecrets = new ConcurrentHashMap<>();
 
@@ -68,4 +70,9 @@ public class MfaService {
             super(message);
         }
     }
+    
+    public static boolean verifyCode(String secretKey, int verificationCode) {
+        return gAuth.authorize(secretKey, verificationCode);
+    }
+
 }

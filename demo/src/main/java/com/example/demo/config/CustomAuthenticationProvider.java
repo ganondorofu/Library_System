@@ -16,6 +16,7 @@ import org.springframework.stereotype.Component;
 import com.example.demo.model.LoginHistory;
 import com.example.demo.model.User;
 import com.example.demo.service.LoginHistoryService;
+import com.example.demo.service.MfaService;  // MfaServiceをインポート
 import com.example.demo.service.UserService;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -27,14 +28,17 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
     private final LoginHistoryService loginHistoryService;
     private final HttpServletRequest request; // IPアドレスやデバイス情報取得用
     private final PasswordEncoder passwordEncoder;
+    private final MfaService mfaService; // MfaServiceを使用
 
     public CustomAuthenticationProvider(UserService userService, 
                                          LoginHistoryService loginHistoryService,
-                                         HttpServletRequest request) {
+                                         HttpServletRequest request,
+                                         MfaService mfaService) {
         this.userService = userService;
         this.loginHistoryService = loginHistoryService;
         this.request = request;
         this.passwordEncoder = new BCryptPasswordEncoder();
+        this.mfaService = mfaService; // MfaServiceをインジェクト
     }
 
     @Override
@@ -45,14 +49,12 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
         UserDetails userDetails = userService.loadUserByUsername(username);
 
         if (userDetails == null) {
-            // ログイン失敗の履歴を記録
             saveLoginHistory(null, false);
             throw new BadCredentialsException("User not found");
         }
 
         // アカウントがロックされている場合
         if (((User) userDetails).isLocked()) {
-            // ログイン失敗の履歴を記録
             saveLoginHistory((User) userDetails, false);
             throw new DisabledException("Account is locked");
         }
@@ -60,17 +62,40 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
         // パスワードが一致しない場合
         if (!passwordEncoder.matches(password, userDetails.getPassword())) {
             userService.increaseFailedAttempts(username); // ログイン失敗回数を増加
-            saveLoginHistory((User) userDetails, false); // ログイン失敗の履歴を記録
+            saveLoginHistory((User) userDetails, false);
             throw new BadCredentialsException("Invalid credentials");
+        }
+
+        User user = (User) userDetails;
+
+        // MFAが設定されている場合、MFAコードを検証
+        if (user.getMfaSecret() != null) {
+            String mfaCode = getMfaCodeFromSession(); // セッションからMFAコードを取得
+
+            if (mfaCode == null || mfaCode.isEmpty()) {
+                throw new BadCredentialsException("MFA code is required"); // MFAコードが提供されていない場合
+            }
+
+            // mfaCodeをintに変換して検証
+            try {
+                int mfaCodeInt = Integer.parseInt(mfaCode); // String -> intに変換
+                boolean mfaVerified = mfaService.verifyCode(user.getMfaSecret(), mfaCodeInt); // MFAコードを検証
+                if (!mfaVerified) {
+                    saveLoginHistory(user, false); // MFA失敗の履歴を記録
+                    throw new BadCredentialsException("Invalid MFA code");
+                }
+            } catch (NumberFormatException e) {
+                throw new BadCredentialsException("Invalid MFA code format", e);
+            }
         }
 
         // ログイン成功時
         userService.resetFailedAttempts(username);
-        saveLoginHistory((User) userDetails, true);
+        saveLoginHistory(user, true);
 
-        return new UsernamePasswordAuthenticationToken(
-                username, null, userDetails.getAuthorities());
+        return new UsernamePasswordAuthenticationToken(username, null, userDetails.getAuthorities());
     }
+
 
     @Override
     public boolean supports(Class<?> authentication) {
@@ -87,5 +112,10 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
         history.setDeviceInfo(request.getHeader("User-Agent"));
 
         loginHistoryService.saveLoginHistory(history);
+    }
+
+    // セッションまたはリクエストからMFAコードを取得するメソッド
+    private String getMfaCodeFromSession() {
+        return request.getParameter("mfa"); // フォームまたはリクエストからMFAコードを取得
     }
 }
