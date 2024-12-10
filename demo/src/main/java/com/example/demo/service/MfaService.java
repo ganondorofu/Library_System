@@ -71,7 +71,7 @@ public class MfaService {
         }
     }
     
-    public static boolean verifyCode(String secretKey, int verificationCode) {
+    public boolean verifyCode(String secretKey, int verificationCode) {
         return gAuth.authorize(secretKey, verificationCode);
     }
 

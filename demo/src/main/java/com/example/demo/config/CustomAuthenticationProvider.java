@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
 import com.example.demo.model.LoginHistory;
 import com.example.demo.model.User;
 import com.example.demo.service.LoginHistoryService;
-import com.example.demo.service.MfaService;  // MfaServiceをインポート
+import com.example.demo.service.MfaService;
 import com.example.demo.service.UserService;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -38,7 +38,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
         this.loginHistoryService = loginHistoryService;
         this.request = request;
         this.passwordEncoder = new BCryptPasswordEncoder();
-        this.mfaService = mfaService; // MfaServiceをインジェクト
+        this.mfaService = mfaService;
     }
 
     @Override
@@ -79,7 +79,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
             // mfaCodeをintに変換して検証
             try {
                 int mfaCodeInt = Integer.parseInt(mfaCode); // String -> intに変換
-                boolean mfaVerified = mfaService.verifyCode(user.getMfaSecret(), mfaCodeInt); // MFAコードを検証
+                boolean mfaVerified = mfaService.verifyCode(user.getUsername(), mfaCodeInt); // インスタンス経由で呼び出し
                 if (!mfaVerified) {
                     saveLoginHistory(user, false); // MFA失敗の履歴を記録
                     throw new BadCredentialsException("Invalid MFA code");
@@ -96,7 +96,6 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
         return new UsernamePasswordAuthenticationToken(username, null, userDetails.getAuthorities());
     }
 
-
     @Override
     public boolean supports(Class<?> authentication) {
         return UsernamePasswordAuthenticationToken.class.isAssignableFrom(authentication);
@@ -110,7 +109,6 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
         history.setLoginTime(LocalDateTime.now());
         history.setIpAddress(request.getRemoteAddr());
         history.setDeviceInfo(request.getHeader("User-Agent"));
-
         loginHistoryService.saveLoginHistory(history);
     }
 

@@ -16,11 +16,9 @@ import com.example.demo.service.UserService;
 @Configuration
 public class SecurityConfig {
 
-    private final UserService userService;
     private final CustomAuthenticationProvider customAuthenticationProvider;
 
     public SecurityConfig(UserService userService, CustomAuthenticationProvider customAuthenticationProvider) {
-        this.userService = userService;
         this.customAuthenticationProvider = customAuthenticationProvider;
     }
 
@@ -42,25 +40,27 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
             .csrf(csrf -> csrf.disable())
-            .authorizeRequests(auth -> auth
-                .requestMatchers("/login", "/register", "/users/**", "/css/**", "/js/**").permitAll()
+            .authorizeHttpRequests(auth -> auth  // authorizeRequests -> authorizeHttpRequests
+                .requestMatchers("/", "/login", "/register", "/users/**", "/css/**", "/js/**").permitAll()
                 .anyRequest().authenticated()  // 他のすべてのリクエストは認証が必要
             )
             .formLogin(form -> form
-                .loginPage("/login") // カスタムログインページ
-                .defaultSuccessUrl("/", true) // ログイン成功後の遷移先
-                .failureUrl("/login?error") // ログイン失敗時のリダイレクト先
+                .loginPage("/login")
+                .defaultSuccessUrl("/", true)
+                .failureUrl("/login?error")
                 .permitAll()
             )
             .logout(logout -> logout
                 .logoutUrl("/logout")
-                .logoutSuccessUrl("/login?logout=true") // ログアウト後のリダイレクト先
+                .logoutSuccessUrl("/login?logout=true")
                 .permitAll()
             )
             .formLogin(form -> form
-                .loginProcessingUrl("/signin") // POST リクエストを受け付けるエンドポイントを指定
+                .loginProcessingUrl("/signin")
             );
 
         return http.build();
     }
+
+
 }
