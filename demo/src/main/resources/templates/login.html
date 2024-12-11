@@ -8,7 +8,7 @@
     <form th:action="@{/signin}" method="post">
         <div>
             <label for="username">ユーザー名</label>
-            <input type="text" id="username" name="username" required>
+            <input type="text" id="username" name="username" required th:value="${username ?: ''}">
         </div>
         <div>
             <label for="password">パスワード</label>
@@ -23,11 +23,10 @@
         </div>
         <div>
             <!-- エラーメッセージを条件分岐 -->
-            <p th:if="${error == 'bad-credentials'}" style="color: red;">ログイン情報が正しくありません。</p>
-            <p th:if="${error == 'unknown'}" style="color: red;">ログインに失敗しました。</p>
-            <p th:if="${error == 'account-locked'}" style="color: red;">アカウントがロックされています。</p>
-            <p th:if="${logout}" style="color: green;">ログアウトしました。</p>
-            <p th:if="${register}" style="color: green;">アカウント登録に成功しました。</p>
+            <p th:if="${error == 'bad-credentials'}">ログイン情報が正しくありません。</p>
+            <p th:if="${error == 'account-locked'}">アカウントがロックされています。</p>
+            <p th:if="${logout}">ログアウトしました。</p>
+            <p th:if="${register}">アカウント登録に成功しました。</p>
         </div>
         <div>
             <a th:href="@{/register}">新規登録</a>

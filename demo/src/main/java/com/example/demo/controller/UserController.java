@@ -1,9 +1,6 @@
 package com.example.demo.controller;
 
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -31,15 +28,31 @@ public class UserController {
 
     // ユーザー登録フォームの表示
     @GetMapping("/register")
-    public String showRegistrationForm(@RequestParam(value = "error", required = false) String error,
-                                       @RequestParam(value = "username", required = false) String username,
-                                       @RequestParam(value = "email", required = false) String email,
-                                       Model model) {
-        model.addAttribute("error", error);
+    public String showRegistrationForm(
+            @RequestParam(value = "username", required = false) String username,
+            @RequestParam(value = "email", required = false) String email,
+            @RequestParam(value = "error", required = false) String error,
+            Model model) {
         model.addAttribute("username", username);
         model.addAttribute("email", email);
+        model.addAttribute("error", error);
         return "register"; // templates/register.htmlを表示
     }
+    
+    @GetMapping("/login")
+	public String showLoginPage(
+	    @RequestParam(value = "error", required = false) String error,
+	    @RequestParam(value = "logout", required = false) String logout,
+	    @RequestParam(value = "username", required = false) String username,
+	    Model model) {
+
+	    System.out.println("Received error parameter: " + error);
+
+	    model.addAttribute("error", error);
+	    model.addAttribute("logout", logout);
+	    model.addAttribute("username", username); // ユーザー名をテンプレートに渡す
+	    return "login"; // templates/login.htmlを表示
+	}
 
     // 新規登録処理
     @PostMapping("/add")
@@ -77,24 +90,8 @@ public class UserController {
         }
     }	
 
-    // signin処理（POSTリクエストでログイン認証）
-    @PostMapping("/signin")
-    public String signinUser(String username, String password, Model model) {
-        try {
-            // ユーザー名とパスワードを使って認証を試みる
-            Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(username, password)
-            );
+    
 
-            // 認証に成功した場合、認証情報をセキュリティコンテキストにセット
-            SecurityContextHolder.getContext().setAuthentication(authentication);
 
-            // ログイン後、ホームページにリダイレクト
-            return "redirect:/"; // ここでリダイレクト先を設定
-        } catch (Exception e) {
-            // 認証失敗時のエラーメッセージを表示
-            model.addAttribute("error", "Invalid username or password");
-            return "login"; // ログイン画面に戻る
-        }
-    }
+
 }

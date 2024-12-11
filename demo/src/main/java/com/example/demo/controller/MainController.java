@@ -13,35 +13,32 @@ public class MainController {
     }
 	
 	// ログインページの表示
-    @GetMapping("/login")
-    public String showLoginPage(
-        @RequestParam(value = "error", required = false) String error,
-        @RequestParam(value = "logout", required = false) String logout,
-        Model model) {
-        
-        System.out.println("Received error parameter: " + error);
+	@GetMapping("/login")
+	public String showLoginPage(
+	    @RequestParam(value = "error", required = false) String error,
+	    @RequestParam(value = "logout", required = false) String logout,
+	    @RequestParam(value = "username", required = false) String username,
+	    Model model) {
 
-    	
-        model.addAttribute("error", error);
-        model.addAttribute("logout", logout);
-        return "login"; // templates/login.htmlを表示
-    }
+	    System.out.println("Received error parameter: " + error);
 
+	    model.addAttribute("error", error);
+	    model.addAttribute("logout", logout);
+	    model.addAttribute("username", username); // ユーザー名をテンプレートに渡す
+	    return "login"; // templates/login.htmlを表示
+	}
+
+    
     @GetMapping("/register")
-    public String register(@RequestParam(value = "error", required = false) String error,
-                           Model model) {
-        // エラーメッセージをテンプレートに渡す
+    public String showRegistrationForm(
+            @RequestParam(value = "username", required = false) String username,
+            @RequestParam(value = "email", required = false) String email,
+            @RequestParam(value = "error", required = false) String error,
+            Model model) {
+        model.addAttribute("username", username);
+        model.addAttribute("email", email);
         model.addAttribute("error", error);
-
-        // 初期値をテンプレートに渡す（再入力補助用）
-        if (!model.containsAttribute("username")) {
-            model.addAttribute("username", "");
-        }
-        if (!model.containsAttribute("email")) {
-            model.addAttribute("email", "");
-        }
-
-        return "register"; // templates/register.htmlをレンダリング
+        return "register"; // templates/register.htmlを表示
     }
 
     @GetMapping("/error")

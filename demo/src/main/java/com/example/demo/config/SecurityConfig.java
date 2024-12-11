@@ -11,14 +11,12 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
-import com.example.demo.service.UserService;
-
 @Configuration
 public class SecurityConfig {
 
     private final CustomAuthenticationProvider customAuthenticationProvider;
 
-    public SecurityConfig(UserService userService, CustomAuthenticationProvider customAuthenticationProvider) {
+    public SecurityConfig(CustomAuthenticationProvider customAuthenticationProvider) {
         this.customAuthenticationProvider = customAuthenticationProvider;
     }
 
@@ -46,14 +44,22 @@ public class SecurityConfig {
                 .defaultSuccessUrl("/", true)
                 .failureHandler((request, response, exception) -> {
                     String error = "unknown";
-                    if (exception.getMessage().equals("bad-credentials")) {
+                    if ("bad-credentials".equals(exception.getMessage())) {
                         error = "bad-credentials";
-                    } else if (exception.getMessage().equals("otp")) {
+                    } else if ("otp".equals(exception.getMessage())) {
                         error = "otp";
-                    } else if (exception.getMessage().equals("account-locked")) {
+                    } else if ("account-locked".equals(exception.getMessage())) {
                         error = "account-locked";
                     }
-                    response.sendRedirect("/login?error=" + error);
+
+                    // リクエストからユーザー名を取得
+                    String username = request.getParameter("username");
+                    String redirectUrl = "/login?error=" + error;
+                    if (username != null && !username.isEmpty()) {
+                        redirectUrl += "&username=" + username;
+                    }
+
+                    response.sendRedirect(redirectUrl);
                 })
                 .permitAll()
             )
