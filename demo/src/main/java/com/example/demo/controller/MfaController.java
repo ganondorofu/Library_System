@@ -26,7 +26,7 @@ public class MfaController {
 
         // QRコードのデータ生成
         String qrCodeData = String.format(
-                "otpauth://totp/%s?secret=%s&issuer=YourAppName",
+                "otpauth://totp/%s?secret=%s&issuer=LibrarySystem",
                 username, secretKey
         );
         String qrCodeImage = MfaUtil.generateQRCodeBase64(qrCodeData);

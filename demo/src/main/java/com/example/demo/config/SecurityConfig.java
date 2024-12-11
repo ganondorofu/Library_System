@@ -5,6 +5,8 @@ import java.util.List;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -40,23 +42,29 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
             .csrf(csrf -> csrf.disable())
-            .authorizeHttpRequests(auth -> auth  // authorizeRequests -> authorizeHttpRequests
+            .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/", "/login", "/register", "/users/**", "/css/**", "/js/**").permitAll()
-                .anyRequest().authenticated()  // 他のすべてのリクエストは認証が必要
+                .anyRequest().authenticated()
             )
             .formLogin(form -> form
                 .loginPage("/login")
+                .loginProcessingUrl("/signin") // ログイン処理のエンドポイント
                 .defaultSuccessUrl("/", true)
-                .failureUrl("/login?error")
+                .failureHandler((request, response, exception) -> {
+                    String error = "unknown"; // デフォルトエラー
+                    if (exception instanceof BadCredentialsException) {
+                        error = "bad-credentials";
+                    } else if (exception instanceof DisabledException) {
+                        error = "account-locked";
+                    }
+                    response.sendRedirect("/login?error=" + error);
+                })
                 .permitAll()
             )
             .logout(logout -> logout
                 .logoutUrl("/logout")
                 .logoutSuccessUrl("/login?logout=true")
                 .permitAll()
-            )
-            .formLogin(form -> form
-                .loginProcessingUrl("/signin")
             );
 
         return http.build();

@@ -11,6 +11,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.demo.model.User;
 import com.example.demo.service.UserService;
@@ -60,9 +61,16 @@ public class UserController {
 
     // ログインページの表示
     @GetMapping("/login")
-    public String showLoginPage() {
+    public String showLoginPage(
+        @RequestParam(value = "error", required = false) String error,
+        @RequestParam(value = "logout", required = false) String logout,
+        Model model) {
+        
+        model.addAttribute("error", error);
+        model.addAttribute("logout", logout);
         return "login"; // templates/login.htmlを表示
     }
+
 
     // signin処理（POSTリクエストでログイン認証）
     @PostMapping("/signin")
