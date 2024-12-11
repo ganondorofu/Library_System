@@ -5,8 +5,6 @@ import java.util.List;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -24,20 +22,16 @@ public class SecurityConfig {
         this.customAuthenticationProvider = customAuthenticationProvider;
     }
 
-    // PasswordEncoderを定義（BCryptでパスワードを暗号化）
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder(); 
     }
 
-    // カスタム認証プロバイダを優先的に登録したAuthenticationManager
     @Bean
     public AuthenticationManager authenticationManager() {
-        // カスタムプロバイダを優先的に登録
         return new ProviderManager(List.of(customAuthenticationProvider));
     }
 
-    // セキュリティの設定（HttpSecurityの設定）
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
@@ -48,13 +42,15 @@ public class SecurityConfig {
             )
             .formLogin(form -> form
                 .loginPage("/login")
-                .loginProcessingUrl("/signin") // ログイン処理のエンドポイント
+                .loginProcessingUrl("/signin")
                 .defaultSuccessUrl("/", true)
                 .failureHandler((request, response, exception) -> {
-                    String error = "unknown"; // デフォルトエラー
-                    if (exception instanceof BadCredentialsException) {
+                    String error = "unknown";
+                    if (exception.getMessage().equals("bad-credentials")) {
                         error = "bad-credentials";
-                    } else if (exception instanceof DisabledException) {
+                    } else if (exception.getMessage().equals("otp")) {
+                        error = "otp";
+                    } else if (exception.getMessage().equals("account-locked")) {
                         error = "account-locked";
                     }
                     response.sendRedirect("/login?error=" + error);
@@ -69,6 +65,4 @@ public class SecurityConfig {
 
         return http.build();
     }
-
-
 }

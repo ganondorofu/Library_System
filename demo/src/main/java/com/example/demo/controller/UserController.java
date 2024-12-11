@@ -7,7 +7,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,8 +14,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.demo.model.User;
 import com.example.demo.service.UserService;
-
-import jakarta.validation.Valid;
 
 @Controller
 @RequestMapping("/users")
@@ -34,43 +31,51 @@ public class UserController {
 
     // ユーザー登録フォームの表示
     @GetMapping("/register")
-    public String showRegistrationForm() {
+    public String showRegistrationForm(@RequestParam(value = "error", required = false) String error,
+                                       @RequestParam(value = "username", required = false) String username,
+                                       @RequestParam(value = "email", required = false) String email,
+                                       Model model) {
+        model.addAttribute("error", error);
+        model.addAttribute("username", username);
+        model.addAttribute("email", email);
         return "register"; // templates/register.htmlを表示
     }
 
     // 新規登録処理
     @PostMapping("/add")
-    public String registerUser(@Valid User user, BindingResult result) {
-        // バリデーションエラーがある場合
-        if (result.hasErrors()) {
-            return "redirect:/register?error=validation"; // バリデーションエラー時にリダイレクト
+    public String registerUser(@RequestParam String username,
+                               @RequestParam String email,
+                               @RequestParam String password) {
+        try {
+            // ユーザー名の重複チェック
+            if (userService.existsByUsername(username)) {
+                return "redirect:/register?error=username-taken&username=" + username + "&email=" + email;
+            }
+
+            // メールアドレスのバリデーション
+            if (!email.matches(".+@.+\\..+")) {
+                return "redirect:/register?error=email-invalid&username=" + username;
+            }
+
+            // パスワードの強度チェック
+            if (password.length() < 8) {
+                return "redirect:/register?error=password-weak&username=" + username + "&email=" + email;
+            }
+
+            // ユーザー作成
+            User user = new User();
+            user.setUsername(username);
+            user.setEmail(email);
+            user.setPassword(passwordEncoder.encode(password));
+            userService.saveUser(user);
+
+            // 成功時、ログインページへリダイレクト
+            return "redirect:/login?register=true";
+
+        } catch (Exception e) {
+            return "redirect:/register?error=general-error";
         }
-
-        // ユーザー名の重複チェック
-        if (userService.existsByUsername(user.getUsername())) {
-            return "redirect:/register?error=duplicate"; // ユーザー名重複時にリダイレクト
-        }
-
-        // パスワードの暗号化と保存
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        userService.saveUser(user);
-
-        // 登録成功後にログインページへリダイレクト
-        return "redirect:/login?register=true";
-    }
-
-    // ログインページの表示
-    @GetMapping("/login")
-    public String showLoginPage(
-        @RequestParam(value = "error", required = false) String error,
-        @RequestParam(value = "logout", required = false) String logout,
-        Model model) {
-        
-        model.addAttribute("error", error);
-        model.addAttribute("logout", logout);
-        return "login"; // templates/login.htmlを表示
-    }
-
+    }	
 
     // signin処理（POSTリクエストでログイン認証）
     @PostMapping("/signin")
